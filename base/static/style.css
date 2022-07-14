@@ -2,8 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+npx tailwindcss -i ./base/static/style.css -o ./base/static/output_style.css --watch
+// ㄴ package.json에 등록
+// ㄴ 이후부터 npm run css로 실행 가능
+*/
+
+@font-face {
+    font-family: 'HoengseongHanu';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202@1.0/HoengseongHanu.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html > body {
+    font-family: "HoengseongHanu";
+    text-underline-position: under;
+}
+
 .backcolor {
     background-color: #ffff00;
+}
+
+.checked {
+    color: red
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
     }
 
-    
+    to {
+        opacity: 1;
+        transform: translateZ(0);
+    }
+}
+
+.test_obj {
+    position: relative;
+    animation: fadeInUp 0.3s;
+}
+
+.btn_open{font-weight:bold; margin:5px; padding:4px 6px; background:#000; color:#fff;}
+.pop_wrap{position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); font-size:0; text-align:center;}
+.pop_wrap:after{display:inline-block; height:100%; vertical-align:middle; content:'';}
+.pop_wrap .pop_inner{display:inline-block; padding:20px 30px; background:#fff; width:200px; vertical-align:middle; font-size:15px;}

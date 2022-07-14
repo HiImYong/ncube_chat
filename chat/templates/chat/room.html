@@ -1,64 +1,187 @@
+{% extends 'common/layout.html' %}
 <!-- chat/templates/chat/room.html -->
+
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8"/>
-    <title>Chat Room</title>
+    <meta charset="utf-8" />
+    <title>채팅방</title>
 </head>
+
+{%block content%}
+
 <body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
-    <input id="whisper-to-channel" type="text">
-    
+    {% if request.user.is_authenticated %}
+    <div id="chat-log" cols="100" rows="20">
+        <div class="message_group"></div>
+    </div><br>
+
+    <div>
+        {%for room_user in user_str_objects%}
+        {%if room_user == super_user_object %}
+        <div class="dropdown ">
+            <label tabindex="0" class="btn m-1 btn-warning">{{room_user}}</label>
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+
+            </ul>
+        </div>
+        {%else%}
+        <div class="dropdown ">
+            <label tabindex="0" class="btn m-1 btn-success">{{room_user}}</label>
+            {%if user.username == super_user_object%}
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                <li>
+                                   
+
+
+                <input type="hidden" value="{{room_user}}" id="kick_user">
+                <input id="kick_user_button" type="button " value="강퇴하기" >
+
+            
+            
+            </li>
+                <li><a>방장 넘기기</a></li>
+            </ul>
+            {%endif%}
+        </div> {%endif%}
+        {%endfor%}
+    </div>
+
+    <input id="chat-message-input" type="text" size="100" class="my-4 input input-bordered input-info w-full "><br>
+
+    <div class="flex justify-between">
+
+    <input id="chat-message-submit" type="button " value="Send" class="btn btn-info btn-outline">
     {{ room_name|json_script:"room-name" }}
+    {{ user.username|json_script:"user-name"}}
+
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const username = JSON.parse(document.getElementById('user-name').textContent);
 
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/chat/'
-            + roomName
-            + '/'
-        );
+        const chatSocket = new WebSocket( // 웹소켓 커넥션 생성. 웹소켓 프로토콜 ws사용
+            'ws://' +
+            window.location.host +
+            '/ws/chat/' +
+            roomName +
+            '/'
+        ); // ws://127.0.0.1:8000/ws/chat/roomName/에 대한 WebSocket을 열려고 한다
 
-        chatSocket.onmessage = function(e) {
+        chatSocket.onmessage = function (e) { // 데이터가 웹서버를 거쳐서 수신되었을 때 .onmessage
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+            // {% comment %} document.querySelector('#chat-log').value += (data.message + '\n'); {% endcomment %}
+            var msg = data.message
+            var usr = data.username
+            var chn = data.channel_name
+
+            if (usr == username) { //나
+
+                $('#chat-log .message_group:last-child').append(
+                    '<span class="alert alert-info shadow-lg test_obj">' + usr + ' : ' + msg + '</span>' + chn +
+                    '<br>');
+
+
+            } else {
+                $('#chat-log .message_group:last-child').append(
+                    '<span class="alert alert-success shadow-lg test_obj">' + usr + ' : ' + msg + '</span>' + chn +
+                    '<br>');
+            }
+
+
+
+            console.log(username)
         };
 
-        chatSocket.onclose = function(e) {
+        chatSocket.onclose = function (e) { // 커넥션이 종료되었을 때 .onclose
             console.error('Chat socket closed unexpectedly');
         };
 
         document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.keyCode === 13) { // enter, return
                 document.querySelector('#chat-message-submit').click();
             }
         };
 
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-
-        document.querySelector('#whisper-to-channel').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#whisper-to-channel').click();
-            }
-        };
-
-        document.querySelector('#chat-message-input').onclick = function(e) {
+        document.querySelector('#chat-message-submit').onclick = function (e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
+            // chatSocket.send(JSON.stringify({
+            //     'message': username + "(이)가 보냅니다 : " + message
+            // }));
+            // 데이터를 .send를 통해 웹서버에게 보냄
+            chatSocket.send(JSON.stringify({ 
+                method_type: 'chat_message_func',
+                username: username,
+                message: message
+            }));
+            messageInputDom.value = '';
+        };
+
+        // 강퇴시키기
+        document.querySelector('#kick_user_button').onclick = function (e) {
+            const kick_user_dom = document.querySelector('#kick_user');
+            const kicked_user = kick_user_dom.value;
+            const message = '방장에 의하여 강퇴되었습니다.'
+
+            chatSocket.send(JSON.stringify({ 
+                method_type: 'kick_user_func',
+                username: kicked_user,
+                message: message
             }));
             messageInputDom.value = '';
         };
     </script>
+
+
+    {%else%}
+    <script>
+        alert('로그인 후 이용이 가능합니다.');
+
+        location.href = "/common/login";
+    </script>
+    {%endif%}
+
+
+
+    <a href="#pop_info_1" class="btn btn-active btn-ghost btn_open">QR code 확인</a>
+
+
+    <div id="pop_info_1" class="pop_wrap" style="display:none;">
+        <div class="pop_inner">
+            <img src="{{qr_code.image.url}}" /><br>
+            <button type="button" class="btn_close">닫기</button>
+        </div>
+    </div>
+
+
+    <script>
+        var target = document.querySelectorAll('.btn_open');
+        var btnPopClose = document.querySelectorAll('.pop_wrap .btn_close');
+        var targetID;
+
+        // 팝업 열기
+        for (var i = 0; i < target.length; i++) {
+            target[i].addEventListener('click', function () {
+                targetID = this.getAttribute('href');
+                document.querySelector(targetID).style.display = 'block';
+            });
+        }
+
+        // 팝업 닫기
+        for (var j = 0; j < target.length; j++) {
+            btnPopClose[j].addEventListener('click', function () {
+                this.parentNode.parentNode.style.display = 'none';
+            });
+        }
+    </script>
+
+
+</div>
+
 </body>
+
 </html>
+
+{% endblock %}

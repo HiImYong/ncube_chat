@@ -1,13 +1,36 @@
-<!-- chat/templates/chat/index.html -->
+{% extends 'common/layout.html' %}
+
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
+    <meta charset="utf-8" />
+    <title>채팅방 입장 페이지</title>
 </head>
+
+{%block content%}
+
 <body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
+    <div class="flex justify-center mt-3">
+        <div class="card w-96 bg-base-100 shadow-xl ">
+            <figure><img
+                    src="https://i.imgur.com/SiVCDyb.png"
+                    alt="CHAT_PROJECT" /></figure>
+            <div class="card-body">
+                🎀채팅방리스트
+                {% for room in room_objects%}      
+
+                        <input type="button" class="alert shadow-lg test_obj cursor-pointer" value="{{room.room_name}}" onclick="room_join('{{room.room_name}}')">
+                                       
+                {% endfor %}
+
+                <div class="card-actions justify-end">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if request.user.is_authenticated %}
+    <input id="room-name-input" type="text" size="100" class="mt-5 input input-bordered input-warning w-full"  placeholder="신규 채팅방 이름을 입력해주세요" ><br>
     <input id="room-name-submit" type="button" value="Enter">
 
     <script>
@@ -18,10 +41,31 @@
             }
         };
 
-        document.querySelector('#room-name-submit').onclick = function(e) {
+        document.querySelector('#room-name-submit').onclick = function (e) {
             var roomName = document.querySelector('#room-name-input').value;
             window.location.pathname = '/chat/' + roomName + '/';
+
         };
+
+        function room_join(room_name){
+            var roomName = room_name;
+            window.location.pathname = '/chat/' + roomName + '/';
+        }
+
+
     </script>
+    {%else%}
+    <script>
+        alert('로그인 후 이용이 가능합니다.');
+
+        location.href = "/common/login";
+    </script>
+    {%endif%}
+
+
+
 </body>
+
 </html>
+
+{% endblock %}

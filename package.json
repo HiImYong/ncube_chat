@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.0.24"
+  },
+  "scripts": {
+    "css": "npx tailwindcss -i ./base/static/style.css -o ./base/static/output_style.css --watch",
+    "debug": "echo 1"
+  },
+  "dependencies": {
+    "daisyui": "^2.18.1"
+  }
+}

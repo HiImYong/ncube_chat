@@ -1,0 +1,48 @@
+{% extends 'common/layout.html' %}   
+
+{%block content%}
+
+<h1>계정찾기페이지</h1>
+
+
+<div class="container">
+<span class = "badge badge-lg">이메일을 적어주세요 : </span>
+<input type="text" id="check_id_input" class="input input-bordered input-accent  w-full max-w-xs"> > 
+<button onclick="check_id()" class="btn">찾기</button>
+</div>
+
+<div id="ajax_return" class="pb-10">
+</div>
+<div class="">
+<a href="{%url 'common:password_reset'%}"><button class="btn">비밀번호를 잃어버렸습니다.</button></a>
+</div>
+{% endblock %}
+
+{%block script%}
+<script>
+$('#hiid').css('color', 'red');
+
+  
+
+function check_id(){
+
+    
+    const name = document.getElementById('check_id_input').value;
+    console.log('why?');
+    console.log(name); 
+
+    $.ajax({
+        type : 'POST',
+        url: 'http://localhost:8000/common/ajax_user_id/',
+        data : {'email' : name},
+        dataType:'json',
+        success: function(result){
+            $('#ajax_return').html('<span class = "badge badge-info badge-lg">' + '당신의 아이디입니다 : ' + '</span>' + '&nbsp' + result.get_id)
+        }
+    })
+
+}
+
+
+</script>
+{%endblock%}

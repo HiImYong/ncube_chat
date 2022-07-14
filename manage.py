@@ -3,6 +3,45 @@
 import os
 import sys
 
+# class People:
+#    def __init__(self, name=""):
+#       self.name = name
+
+#    def get_name(self):
+#        print(type(self))
+#        return self.name
+#    def set_name(self, name):
+#        self.name = name
+
+#    @classmethod
+#    def set_aaa(cls, aaa):
+#        cls.aaa = aaa
+
+#    @classmethod
+#    def set_bbb(cls, bbb):
+#        cls.aaa = aaa
+
+#    aaa = ""
+#    @staticmethod
+#    def set_aaa(aaa):
+#        People.aaa = aaa
+#    @staticmethod
+#    def get_aaa():
+#       return People.aaa
+
+# p = People()
+# p2 =People()
+
+# p.set_name("aaa")
+# p2.set_name("bbb")
+
+# p.set_aaa('ccc')
+# p.aaa = "ddd"
+
+# print(p.get_name())
+# print(p2.get_name())
+
+# print(p2.get_aaa())
 
 def main():
     """Run administrative tasks."""
