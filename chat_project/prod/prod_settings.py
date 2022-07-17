@@ -1,4 +1,4 @@
-from .settings import *
+from ..settings import *
 
 DEBUG = False
 
@@ -20,3 +20,9 @@ DATABASES = {
         }
     }
 }
+
+STATIC_URL = '/static/'
+#추가
+STATICFILES_DIRS = [
+    BASE_DIR / 'base/static',
+]
