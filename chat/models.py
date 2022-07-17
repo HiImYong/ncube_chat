@@ -59,9 +59,11 @@ class Room(models.Model):
          room = cls.objects.filter(room_name=room_name).first()
          users = cls.objects.get(id=room.id).users
          # print(users.count())
-         # print('user list : ', users.values()) 
-         # ㄴ 조인 관계형 필드의 콘솔 조회는 1. 원래 테이블에서 필터링 > 2. 필터링 된 테이블에서 get > 3. 가져온 쿼리스트링에 .values() 적용하여 보자!
+
          # if room.exists():
+
+         print('현재유저 > ', users.count())
+
          if users.count() >= 2:
             room.users.remove(user)
             print(user, '가 채팅방 데이터 베이스에서 삭제되었음')
@@ -77,17 +79,24 @@ class Channel_names(models.Model):
     @classmethod
     @sync_to_async
     def add(cls, channel_name, user):
+        if cls.objects.filter(user_name=user):
+            channel = cls.objects.filter(user_name=user).first()
+            channel.delete()
         cls.objects.create(user_name=user, channel_name=channel_name)
 
     @classmethod
     @sync_to_async
-    def remove(cls, channel_name):
+    def remove_ch_list(cls, channel_name):
         channel = cls.objects.filter(channel_name=channel_name).first()
-        channel.delete()
+        print('삭제채널 : ', channel)
+        if channel is not None:
+            channel.delete()
 
     @classmethod
     @sync_to_async
     def get(cls, user):
         kick_user = cls.objects.filter(user_name=user).first().channel_name
+        print('강퇴대상 >>>', kick_user)
         return kick_user
-        
+
+ 

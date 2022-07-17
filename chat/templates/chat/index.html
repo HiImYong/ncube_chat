@@ -18,6 +18,7 @@
                     alt="CHAT_PROJECT" /></figure>
             <div class="card-body">
                 🎀채팅방리스트
+                <hr>
                 {% for room in room_objects%}      
 
                         <input type="button" class="alert shadow-lg test_obj cursor-pointer" value="{{room.room_name}}" onclick="room_join('{{room.room_name}}')">

@@ -35,8 +35,8 @@
                                    
 
 
-                <input type="hidden" value="{{room_user}}" id="kick_user">
-                <input id="kick_user_button" type="button " value="강퇴하기" >
+
+                <button onclick="kick_user('{{room_user}}')">{{room_user}} 강퇴</button>
 
             
             
@@ -120,9 +120,9 @@
         };
 
         // 강퇴시키기
-        document.querySelector('#kick_user_button').onclick = function (e) {
-            const kick_user_dom = document.querySelector('#kick_user');
-            const kicked_user = kick_user_dom.value;
+         function kick_user(e) {
+            
+            const kicked_user = e;
             const message = '방장에 의하여 강퇴되었습니다.'
 
             chatSocket.send(JSON.stringify({ 

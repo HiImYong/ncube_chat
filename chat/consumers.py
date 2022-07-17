@@ -51,9 +51,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         print('연결끊김 : ',self)
 
+
+
         if self.scope.get('user').is_authenticated:
             await Room.remove(self.room_name, self.scope.get('user'))
-            await Channel_names.remove(self.channel_name)
             
 
     # Receive message from WebSocket 
@@ -105,8 +106,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name,
         kick_user
         )
-        await Channel_names.remove(kick_user)
 
+        await Channel_names.remove_ch_list(kick_user)
+        # Room.remove(self.room_name, 1)
 
         # if self.scope.get('user').is_authenticated:
         #     await Room.remove(self.room_name, 1)

@@ -17,14 +17,14 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
             </label>
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-              <li><a>메인페이지</a></li>
+              <li><a>권고사직</a></li>
               
-              <li><a>About</a></li>
+              <li><a>명예퇴직</a></li>
             </ul>
           </div>
         </div>
         <div class="navbar-center">
-          <a class="btn btn-ghost normal-case text-xl">Hello Channels!</a>
+          <a class="btn btn-ghost normal-case text-xl" href="{% url 'chat:index'%}">Hello Channels!</a>
         </div>
         {% if request.user.is_authenticated %}
         <div class="navbar-end">
