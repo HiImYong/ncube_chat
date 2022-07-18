@@ -185,4 +185,4 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-CSRF_TRUSTED_ORIGINS = ['https://chat.uyong.site']
+CSRF_TRUSTED_ORIGINS = ['https://chatting.uyong.site']
