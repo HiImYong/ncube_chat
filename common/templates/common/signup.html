@@ -28,8 +28,6 @@
                 {% endfor %}
             </div>
             {% endif %}
-            {{show_error}}
-
             <label for="">이름</label>
             <input type="text" name="username" id="username" value="{{ form.username.value|default_if_none:'' }}"
                 class="input input-bordered input-accent w-full max-w-xs">
