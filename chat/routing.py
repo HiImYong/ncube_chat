@@ -10,3 +10,5 @@ websocket_urlpatterns = [
 
 ]
 
+ASGI_APPLICATION = "Channels_test_project.routing.application"
+

@@ -345,3 +345,8 @@ Room.objects.get(room_name=room_name)
 ---
 
                 <li><form action="{%url 'chat:kick_user' room_name='dd'%}" method="post">
+
+---
+
+         # print('user list : ', users.values()) 
+         # ㄴ 조인 관계형 필드의 콘솔 조회는 1. 원래 테이블에서 필터링 > 2. 필터링 된 테이블에서 get > 3. 가져온 쿼리스트링에 .values() 적용하여 보자!

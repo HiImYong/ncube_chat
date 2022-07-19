@@ -76,7 +76,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     # Receive message from room group
-    async def chat_message_func(self, event):
+    async def groupsend(self, event):
         username = event['username']
         message = event['message']
         
@@ -101,6 +101,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         'message':message,
         'channel_name': self.channel_name
         }))
+        
 
         await self.channel_layer.group_discard(
         self.room_group_name,
