@@ -350,3 +350,64 @@ Room.objects.get(room_name=room_name)
 
          # print('user list : ', users.values()) 
          # ㄴ 조인 관계형 필드의 콘솔 조회는 1. 원래 테이블에서 필터링 > 2. 필터링 된 테이블에서 get > 3. 가져온 쿼리스트링에 .values() 적용하여 보자!
+
+---
+
+docker run -d \
+  --name chatting \
+  --restart unless-stopped \
+  -e TZ=Asia/Seoul \
+  -p 8033:8033 \
+  -v /docker_projects/nginx__1/data/site_projects/chatting:/data/site_projects/chatting \
+  python:3 \
+  tail -f /dev/null
+
+
+docker exec chatting apt-get update -y
+docker exec chatting apt-get install vim mlocate -y
+docker exec chatting pip install --upgrade pip
+docker exec chatting pip install Django mysqlclient gunicorn
+
+docker exec chatting  mkdir /data/site_projects/chatting/src
+
+
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; git init"
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; git remote add origin https://github.com/HiImYong/ncube_chat"
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; git pull origin master"
+sudo vim /docker_projects/nginx__1/data/site_projects/chatting/src/.env
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; pip install -r chat_project/prod/prod_pip.txt"
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; pip install pyOpenSSL"
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; pip install channels"
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; pip install Twisted"
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; pip install daphne"
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; pip install media"
+# 이 부분은 원래 prod.txt에 있어야 했는데 내가 빼먹어서 임의로 써줌. 만약에 빼먹은거 있으면 이렇게 써주자
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; python manage.py migrate --settings=chat_project.prod.prod_settings"
+
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; python manage.py migrate --settings=chat_project.settings"
+
+docker exec chatting bash -c "cd /data/site_projects/chatting/src ; nohup gunicorn --bind=0.0.0.0:8033 chat_project.wsgi &"
+docker exec chatting bash -c "cd /data/site_projects/chatting/src ; nohup daphne chat_project.asgi:application --port 80 --bind 0.0.0.0 -v2 &"
+
+
+docker exec chatting pkill "gunicorn"
+
+
+
+docker exec chatting bash -c "cd /data/site_projects/chatting/src/ ; python ./manage.py makemigrations chat"
+
+docker exec -it chatting bash -c "cd /data/site_projects/chatting/src ; echo yes | python manage.py collectstatic --settings=chat_project.prod.prod_settings"
+
+
+
+./letsencrypt-auto-source/letsencrypt-auto certonly --manual --email tlsrb0025@gmail.com -d chat.uyong.site
+
+---
+
+apt-get : command not found? 
+sudo: apt-get : command not found
+$ sudo: apt-get : command not found 
+
+ 
+AWS linux 를 이용하시는 거면 yum 을 쓰시면 됩니다! 
+$ sudo yum install <package이름>

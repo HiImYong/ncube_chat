@@ -59,6 +59,7 @@
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
         const username = JSON.parse(document.getElementById('user-name').textContent);
+        // ## [배포] ws와 wws 확인!
 
         const chatSocket = new WebSocket( // 웹소켓 커넥션 생성. 웹소켓 프로토콜 ws사용
             'wss://' +

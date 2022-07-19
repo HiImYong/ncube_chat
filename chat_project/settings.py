@@ -79,6 +79,7 @@ WSGI_APPLICATION = 'chat_project.wsgi.application'
 ASGI_APPLICATION = 'chat_project.asgi.application'
 
 # 장고에 채널 redis 세팅
+## [배포] 주소 변경 필수!
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -89,14 +90,14 @@ CHANNEL_LAYERS = {
     },
 }
 
-
+## [배포] 주소 변경 필수!
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'chat',
-        'USER': 'sbsst',
-        'PASSWORD': 'sbs123414',
-        'HOST': '172.17.0.1',
+        'USER': 'ncube',
+        'PASSWORD': 'ncube123',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
